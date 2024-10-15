@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No name selected yet!</title>
+    <link rel="stylesheet" href="styles.css">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+</head>
+<body>
+
+    <nav> <!-- Position: absolute-->
+
+        <ul class="nav-item-list">
+            <li id="nav-item" data-navfunc="selected-courses-info"><i class="fa-solid fa-circle-info"></i></li>
+        </ul>
+
+        <div class="nav-func-container">
+            <div class="nav-func-selected-courses-info">
+                Hello mate!
+            </div>
+        </div>
+
+        
+    </nav>
+
+    <h1 id='title'>Bracu Course Scheduler! <span> by Shimanto</span></h1>
+
+    
+    <main>
+
+        <div class="cover">
+
+        </div>
+
+        <div class="course-selector visible">
+            <div class="filters">
+                <div class="course-code-filter-container">
+                    <h3>course codes</h3>
+                    <div class="course-code-items-container">
+                    </div>
+                    <input type="text" placeholder="Type course code here" id="course-code-input"><button id="course-code-item-add-btn">Find Course</button>   
+                </div>
+                
+
+                <div class="course-time-day-filter-container">
+                    <div class="course-time-filter-container">
+                        <h3>Time</h3>
+                        <div class="course-time-item-container">
+                            
+                        </div>
+                        <select name="course-time-select" id="course-time-select">
+                            <option value="none">None</option>
+                            <option value="08:00 AM">8:00 AM</option>
+                            <option value="09:30 AM">9:30 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="12:30 PM">12:30 PM</option>
+                            <option value="02:00 PM">2:00 PM</option>
+                            <option value="3:30 PM">3:30 PM</option>
+                        </select>
+                        
+                    </div>
+            
+                    <div class="course-day-filter-container">
+                        <h3>Day of week</h3>
+                        <div class="course-day-item-container">
+            
+                        </div>
+                        <select name="course-day-select" id="course-day-select">
+                            <option value="none">None</option>
+                            <option value="sunday">Sunday - Tuesday</option>
+                            <option value="monday">Monday - Wednesday</option>
+                            <option value="saturday">Saturday - Thursday</option>
+                        </select>          
+                    </div>
+                </div>
+
+            </div>
+            
+    
+            <div class="course-list">
+                <p><b>Tip:</b> Double click on an course item to add</p>
+                <br>
+                <p><b>Tip:</b> Click on an occupied cell to delete that course from table</p>
+                <br>
+                <p><b>Tip:</b> Click on an empty cell to auto filter courses to that timing</p>
+                <br>
+            </div>
+    
+        </div>
+
+        <div class="comparison-table-container">
+            <div class="comparison-table-header">
+                <h3></h3>
+                <button class="hide-comparison-table-btn"><i class="fa-solid fa-x"></i></button>
+            </div>
+        </div>
+
+        <div class="table-container">
+
+            <div class="table-header">
+                <h3></h3>
+                <button class="compare-table-btn">Compare</button>
+                <button class="download-table-btn">Download</button>
+                <button class="clear-table-btn">Clear</button>
+                <button class="del-table-btn">Delete</button>
+                <button class="new-table-btn">New Table</button>
+                <button class="prev-table-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                <button class="next-table-btn"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            
+            
+        </div>
+
+        
+    </main>
+
+    
+
+    <script src="main.js"></script>
+</body>

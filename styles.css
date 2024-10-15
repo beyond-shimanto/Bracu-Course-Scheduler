@@ -1,0 +1,484 @@
+:root{
+    --primary-bg: #141414;
+    --secondary-bg: #282828;
+    --accent: #785dc8;
+    --alt-accent: #8fd7d2;
+    font-size: 16px;
+    
+}
+
+@keyframes course-item-selected{
+    from{
+        background-color: var(--primary-bg);
+        box-shadow: #70cfc9 0px 0px 22px;
+        
+    }
+    to {
+        background-color: #6fb07f;
+        box-shadow: #0a5700 0px 0px 100px;
+    }
+}
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'IBM Plex Mono';
+}
+
+
+body{
+    background-color: var(--primary-bg);
+    color: white;
+    height: 100vh;
+}
+
+#title{
+    font-family: 'Playwrite GB S';
+    font-weight: 300;
+    margin-left: 6rem;
+
+    width: fit-content;
+    height: 3.5rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+#title span{
+    font-family: 'DM Sans';
+    font-size: 0.8rem;
+}
+
+#title::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(to right , var(--alt-accent) , var(--accent));
+}
+
+
+
+#instructions{
+    display: none;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    font-family: 'DM Sans';
+    font-size: 0.8rem;
+}
+
+
+nav{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--secondary-bg);
+    width: 5rem;
+    height: 100%;
+    transition: 0.8s ease;
+
+    z-index: 4;
+}
+
+nav.expanded{
+    width: 75%;
+    max-width: 800px;
+}
+
+nav ul{
+    padding-top: 1rem;
+    position: absolute;
+    top:0;
+    left:0;
+    width: 5rem;
+    height: 100%;
+    font-size: 2rem;
+}
+
+nav ul > li{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+nav ul > li:hover{
+    background-color: #4d3b81;
+}
+
+nav ul > li:active{
+    color: black;
+    background-color: white;
+}
+
+nav .nav-func-container{
+    margin-left: 5rem;
+    padding: 1rem;
+}
+
+nav .nav-func-container > *{
+    display: none;
+}
+
+.nav-func-selected-courses-info.visible{
+    display: block;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+.course-info-card{
+    border: 1px solid gray;
+    margin: 1rem;
+    transition: 0.3s;
+
+}
+
+.course-info-card:hover{
+    box-shadow: var(--accent) 0px 0px 14px;
+}
+
+main{
+    margin-left: 5rem;
+    padding: 0rem 1rem;
+    height: calc(100% - 4rem);
+    width: calc(100% - 5rem);
+    position: relative;
+
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.cover{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.cover.visible{
+    display: block;
+}
+
+
+.course-selector{
+    display: none;
+    flex-direction: column;
+    justify-content: start;
+    height: 100%;
+    flex: 1;
+
+
+}
+
+.course-selector.visible{
+    display: flex;
+}
+
+
+.filters{
+    border: 0px;
+}
+
+.filters > *{
+    margin: 0.5rem;
+}
+
+.course-time-day-filter-container{
+    display: flex;
+    gap: 0.5rem;
+}
+
+.course-time-filter-container, .course-day-filter-container{
+    flex: 1;
+}
+
+#course-time-select, #course-day-select{
+    margin-top: 0.4rem;
+    width: 100%;
+}
+
+#download-btn{
+    display: none;
+    background-color: var(--accent);
+    width: 100%;
+    height: 2rem;
+    text-align: center;
+    color: white;
+    font-weight: 500;
+
+    appearance: none;
+    border: none;
+    outline: none;
+
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+#download-btn:hover{
+    box-shadow: var(--alt-accent) 0 0 8px;
+}
+
+#download-btn:active{
+    background-color: beige;
+    color: black;
+}
+
+.filters input{
+    background-color: transparent;
+    outline: none;
+    appearance: none;
+    border: none;
+    color: white;
+    border-bottom: 2px solid white;
+    transition: 0.2s;
+    margin-right: 10px;
+
+    width: 100%;
+    margin-bottom: 0.5rem;
+
+}
+
+.filters input:focus{
+    border-bottom: 4px solid var(--accent);
+}
+
+
+
+#course-code-item-add-btn{
+    outline: none;
+    border: none;
+    appearance: none;
+    cursor: pointer;
+
+    background-color: var(--accent);
+    text-align: center;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+    width: 100%;
+
+}
+
+#course-code-item-delete-btn{
+    outline: none;
+    border: none;
+    appearance: none;
+    background-color: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 1.3rem;
+    margin-left: 10px;
+}
+
+
+.course-list{
+    overflow: scroll;
+    overflow-x: hidden;
+    width: fit-content;
+    height: 100%;
+
+    flex: 1;
+    width: 100%;
+
+    padding-top: 1rem;
+}
+
+
+
+.course-list-item-container{
+    margin: 0.3rem;
+    border: 1px solid gray;
+    text-align: center;
+    font-size: 0.9rem;
+
+    cursor: pointer;
+    user-select: none; /* standard syntax */
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+    transition: 0.3s;
+
+
+}
+
+.course-list-item-container.animate{
+    animation: course-item-selected 0.3s;
+}
+
+.course-list-item-container p{
+    margin: 0.5rem;
+    font-family: 'IBM Plex mono';
+}
+
+.course-list-item-container:hover{
+    box-shadow: var(--accent) 0px 0px 14px;
+}
+
+.course-list::-webkit-scrollbar{
+    width: 0.5rem;
+}
+
+
+.course-list::-webkit-scrollbar-track{
+    background-color: rgb(80, 80, 80);
+}
+
+.course-list::-webkit-scrollbar-thumb{
+    background-color: var(--accent);
+}
+
+
+.comparison-table-container{
+    display: none;
+}
+
+.comparison-table-container.visible{
+    display: block;
+    flex: 3;
+    padding: 1rem;
+
+    margin: 0;
+}
+
+.comparison-table-header{
+    padding: 1rem;
+    display: flex;
+    justify-content: end;
+    gap: 1rem;
+    align-items: center;
+
+}
+
+.comparison-table-header h3{
+    margin-right: auto;
+}
+
+.hide-comparison-table-btn{
+    outline: none;
+    appearance: none;
+    border: none;
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 2rem;
+    background-color: transparent;
+    padding: 0.5rem;
+    transition: 0.3s;
+}
+
+.hide-comparison-table-btn:hover{
+    background-color: #4d3b81;
+}
+
+.hide-comparison-table-btn:active{
+    background-color: white;
+    color: black;
+}
+
+.table-container{
+    flex: 3;
+    padding: 1rem;
+}
+
+
+.table-header{
+    padding: 1rem;
+    display: flex;
+    justify-content: end;
+    gap: 1rem;
+    align-items: center;
+
+}
+
+.table-header h3{
+    margin-right: auto;
+}
+
+.table-header > button{
+    outline: none;
+    appearance: none;
+    border: none;
+    color: white;
+    padding: 0.5rem;
+
+    cursor: pointer;
+}
+
+.prev-table-btn, .next-table-btn{
+    font-size: 2rem;
+    background-color: transparent;
+    padding: 0;
+    transition: 0.3s;
+}
+
+.prev-table-btn{
+    transform: rotate(-180deg);
+}
+
+.prev-table-btn:hover, .next-table-btn:hover, .compare-table-btn:hover, .download-table-btn:hover, .clear-table-btn:hover, .del-table-btn:hover, .new-table-btn:hover {
+    background-color: #4d3b81;
+}
+
+.prev-table-btn:active, .next-table-btn:active, .compare-table-btn:active, .download-table-btn:active, .clear-table-btn:active, .del-table-btn:active, .new-table-btn:active {
+    background-color: white;
+    color: black;
+}
+
+.compare-table-btn, .download-table-btn, .clear-table-btn, .del-table-btn, .new-table-btn{
+    background-color: var(--accent);
+    transition: 0.3s;
+}
+
+.table{
+    display: none;
+    background-color: var(--primary-bg);
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1000px;
+    height: 85%;
+    grid-template-columns: repeat(8,1fr);
+    grid-auto-rows: 1fr;
+}
+
+.table.comparison{
+    display: grid;
+}
+
+
+
+.table.active{
+    display: grid;
+}
+
+.table-cell{
+    border: 1px solid white;
+    cursor: pointer;
+    transition: 0.5s;
+    text-align: center;
+}
+
+.table-cell:hover{
+    box-shadow: #dddddd 0px 0px 25px;
+}
+
+.table-cell.delete-prompt{
+    background-color: #d9282892;
+}
+
+
+
+
+
+
