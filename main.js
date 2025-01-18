@@ -344,12 +344,12 @@ function makeTable(){
                 <!-- row 1-->
                 <div class="table-cell"><span class='lg-view'>Time/Day</span><span class='sm-view'>T/D</span></div>
                 <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
-                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
-                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
-                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
-                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
-                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
-                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
+                <div class="table-cell"><span class='lg-view'>Monday</span><span class='sm-view'>M</span></div>
+                <div class="table-cell"><span class='lg-view'>Tuesday</span><span class='sm-view'>T</span></div>
+                <div class="table-cell"><span class='lg-view'>Wednesday</span><span class='sm-view'>W</span></div>
+                <div class="table-cell"><span class='lg-view'>Thursday</span><span class='sm-view'>Th</span></div>
+                <div class="table-cell"><span class='lg-view'>Friday</span><span class='sm-view'>F</span></div>
+                <div class="table-cell"><span class='lg-view'>Saturday</span><span class='sm-view'>Sa</span></div>
     
                 <!-- row 08:00 AM-->
                 <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
@@ -362,7 +362,7 @@ function makeTable(){
                 <div data-row="08:00 AM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 09:30 AM-->
-                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
+                <div class="table-cell"><span class='lg-view'>09:30 AM</span><span class='sm-view'>9.30AM</span></div>
                 <div data-row="09:30 AM" data-col="sunday" class="table-cell"></div>
                 <div data-row="09:30 AM" data-col="monday" class="table-cell"></div>
                 <div data-row="09:30 AM" data-col="tuesday" class="table-cell"></div>
@@ -372,7 +372,7 @@ function makeTable(){
                 <div data-row="09:30 AM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 11:00 AM-->
-                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
+                <div class="table-cell"><span class='lg-view'>11.00 AM</span><span class='sm-view'>11AM</span></div>
                 <div data-row="11:00 AM" data-col="sunday" class="table-cell"></div>
                 <div data-row="11:00 AM" data-col="monday" class="table-cell"></div>
                 <div data-row="11:00 AM" data-col="tuesday" class="table-cell"></div>
@@ -382,7 +382,7 @@ function makeTable(){
                 <div data-row="11:00 AM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 12:30 PM-->
-                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
+                <div class="table-cell"><span class='lg-view'>12:30 PM</span><span class='sm-view'>12.30</span></div>
                 <div data-row="12:30 PM" data-col="sunday" class="table-cell"></div>
                 <div data-row="12:30 PM" data-col="monday" class="table-cell"></div>
                 <div data-row="12:30 PM" data-col="tuesday" class="table-cell"></div>
@@ -392,7 +392,7 @@ function makeTable(){
                 <div data-row="12:30 PM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 02:00 PM-->
-                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
+                <div class="table-cell"><span class='lg-view'>02:00 PM</span><span class='sm-view'>2PM</span></div>
                 <div data-row="02:00 PM" data-col="sunday" class="table-cell"></div>
                 <div data-row="02:00 PM" data-col="monday" class="table-cell"></div>
                 <div data-row="02:00 PM" data-col="tuesday" class="table-cell"></div>
@@ -402,7 +402,7 @@ function makeTable(){
                 <div data-row="02:00 PM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 03:30 PM-->
-                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
+                <div class="table-cell"><span class='lg-view'>03:30 PM</span><span class='sm-view'>3.30PM</span></div>
                 <div data-row="03:30 PM" data-col="sunday" class="table-cell"></div>
                 <div data-row="03:30 PM" data-col="monday" class="table-cell"></div>
                 <div data-row="03:30 PM" data-col="tuesday" class="table-cell"></div>
@@ -412,7 +412,7 @@ function makeTable(){
                 <div data-row="03:30 PM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 05:00 PM-->
-                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
+                <div class="table-cell"><span class='lg-view'>05:00 PM</span><span class='sm-view'>5PM</span></div>
                 <div data-row="05:00 PM" data-col="sunday" class="table-cell"></div>
                 <div data-row="05:00 PM" data-col="monday" class="table-cell"></div>
                 <div data-row="05:00 PM" data-col="tuesday" class="table-cell"></div>
