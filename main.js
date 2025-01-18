@@ -1,5 +1,5 @@
 //God forgive me for I have written the most dogshit and unreadable code in the history of humankind 💀💀
-//Made by Sabbir Shimanto(23201086), Brac University
+//Made by Sabbir Shimanto, Brac University(ID: 23201086)
 
 
 //gotta refactor this code :""""(
@@ -11,7 +11,7 @@ async function fetchJsonData(){
     const data = await response.json();
 
     // sort the data according to sections
-    //This code was ripped off from preprereg git repo 💀
+    //This following bit was ripped off from preprereg git repo 💀
     data.sort(function(a, b) {
         return a["courseDetails"].localeCompare(b["courseDetails"]);
     });
@@ -50,9 +50,18 @@ async function main(){
 
     const navBarItemsList = document.querySelector('.nav-item-list');
 
+    const mobile_courseListCcontainerButtonEl = document.querySelector('.mobile-course-list-container-btn');
+    const mobile_TableContainerButton = document.querySelector('.mobile-table-container-btn');
+
+
 
     coursesData = await fetchJsonData();
 
+
+    //mobile navbar event callback functions
+
+    mobile_courseListCcontainerButtonEl.addEventListener('click', e => {mobile_showCourseSelectorContainer()});
+    mobile_TableContainerButton.addEventListener('click', e => {mobile_showTableContainer()});
 
 
     //Event callback functions
@@ -221,6 +230,25 @@ async function main(){
 
 }
 
+//mobile navbar functions
+function mobile_showTableContainer(){
+    const tableContainerEl = document.querySelector('.table-container');
+    const courseSelectorContainerEl = document.querySelector('.course-selector');
+
+    tableContainerEl.classList.remove('mobile-hide');
+    courseSelectorContainerEl.classList.add('mobile-hide');
+}
+
+function mobile_showCourseSelectorContainer(){
+    const tableContainerEl = document.querySelector('.table-container');
+    const courseSelectorContainerEl = document.querySelector('.course-selector');
+
+    tableContainerEl.classList.add('mobile-hide');
+    courseSelectorContainerEl.classList.remove('mobile-hide');
+}
+
+
+
 //navbar related functions
 
 function expandNavBar(navFunction){
@@ -314,17 +342,17 @@ function makeTable(){
     tableContainerEl.insertAdjacentHTML('beforeend', `
             <div data-tableid="${tableId}" class="table">
                 <!-- row 1-->
-                <div class="table-cell">Time/Day</div>
-                <div class="table-cell">Sunday</div>
-                <div class="table-cell">Monday</div>
-                <div class="table-cell">Tuesday</div>
-                <div class="table-cell">Wednesday</div>
-                <div class="table-cell">Thursday</div>
-                <div class="table-cell">Friday</div>
-                <div class="table-cell">Saturday</div>
+                <div class="table-cell"><span class='lg-view'>Time/Day</span><span class='sm-view'>T/D</span></div>
+                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
+                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
+                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
+                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
+                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
+                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
+                <div class="table-cell"><span class='lg-view'>Sunday</span><span class='sm-view'>S</span></div>
     
                 <!-- row 08:00 AM-->
-                <div class="table-cell">8:00 AM</div>
+                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
                 <div data-row="08:00 AM" data-col="sunday" class="table-cell"></div>
                 <div data-row="08:00 AM" data-col="monday" class="table-cell"></div>
                 <div data-row="08:00 AM" data-col="tuesday" class="table-cell"></div>
@@ -334,7 +362,7 @@ function makeTable(){
                 <div data-row="08:00 AM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 09:30 AM-->
-                <div class="table-cell">9:30 AM</div>
+                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
                 <div data-row="09:30 AM" data-col="sunday" class="table-cell"></div>
                 <div data-row="09:30 AM" data-col="monday" class="table-cell"></div>
                 <div data-row="09:30 AM" data-col="tuesday" class="table-cell"></div>
@@ -344,7 +372,7 @@ function makeTable(){
                 <div data-row="09:30 AM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 11:00 AM-->
-                <div class="table-cell">11:00 AM</div>
+                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
                 <div data-row="11:00 AM" data-col="sunday" class="table-cell"></div>
                 <div data-row="11:00 AM" data-col="monday" class="table-cell"></div>
                 <div data-row="11:00 AM" data-col="tuesday" class="table-cell"></div>
@@ -354,7 +382,7 @@ function makeTable(){
                 <div data-row="11:00 AM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 12:30 PM-->
-                <div class="table-cell">12:30 PM</div>
+                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
                 <div data-row="12:30 PM" data-col="sunday" class="table-cell"></div>
                 <div data-row="12:30 PM" data-col="monday" class="table-cell"></div>
                 <div data-row="12:30 PM" data-col="tuesday" class="table-cell"></div>
@@ -364,7 +392,7 @@ function makeTable(){
                 <div data-row="12:30 PM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 02:00 PM-->
-                <div class="table-cell">2:00 PM</div>
+                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
                 <div data-row="02:00 PM" data-col="sunday" class="table-cell"></div>
                 <div data-row="02:00 PM" data-col="monday" class="table-cell"></div>
                 <div data-row="02:00 PM" data-col="tuesday" class="table-cell"></div>
@@ -374,7 +402,7 @@ function makeTable(){
                 <div data-row="02:00 PM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 03:30 PM-->
-                <div class="table-cell">3:30 PM</div>
+                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
                 <div data-row="03:30 PM" data-col="sunday" class="table-cell"></div>
                 <div data-row="03:30 PM" data-col="monday" class="table-cell"></div>
                 <div data-row="03:30 PM" data-col="tuesday" class="table-cell"></div>
@@ -384,7 +412,7 @@ function makeTable(){
                 <div data-row="03:30 PM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 05:00 PM-->
-                <div class="table-cell">5:00 PM</div>
+                <div class="table-cell"><span class='lg-view'>08:00 AM</span><span class='sm-view'>8AM</span></div>
                 <div data-row="05:00 PM" data-col="sunday" class="table-cell"></div>
                 <div data-row="05:00 PM" data-col="monday" class="table-cell"></div>
                 <div data-row="05:00 PM" data-col="tuesday" class="table-cell"></div>
@@ -921,7 +949,6 @@ function getFacultyName(courseObject){
 function getLabTimes(courseObject){
 
     //I can't explain how this function works 💀
-    //can't tell why my naming convention changed either
 
     if (courseObject.classSchedule === courseObject.classLabSchedule){
         return null;
