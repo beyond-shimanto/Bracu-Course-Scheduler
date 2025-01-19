@@ -52,6 +52,7 @@ async function main(){
 
     const mobile_courseListCcontainerButtonEl = document.querySelector('.mobile-course-list-container-btn');
     const mobile_TableContainerButton = document.querySelector('.mobile-table-container-btn');
+    const mobile_selectedCourseInfoButtonEl = document.querySelector('.mobile-selected-course-info-btn');
 
 
 
@@ -62,6 +63,7 @@ async function main(){
 
     mobile_courseListCcontainerButtonEl.addEventListener('click', e => {mobile_showCourseSelectorContainer()});
     mobile_TableContainerButton.addEventListener('click', e => {mobile_showTableContainer()});
+    mobile_selectedCourseInfoButtonEl.addEventListener('click', e=> {expandNavBar('selected-courses-info')});
 
 
     //Event callback functions
@@ -237,6 +239,7 @@ function mobile_showTableContainer(){
 
     tableContainerEl.classList.remove('mobile-hide');
     courseSelectorContainerEl.classList.add('mobile-hide');
+    collapseNavBar();
 }
 
 function mobile_showCourseSelectorContainer(){
@@ -245,6 +248,7 @@ function mobile_showCourseSelectorContainer(){
 
     tableContainerEl.classList.add('mobile-hide');
     courseSelectorContainerEl.classList.remove('mobile-hide');
+    collapseNavBar();
 }
 
 
@@ -362,7 +366,7 @@ function makeTable(){
                 <div data-row="08:00 AM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 09:30 AM-->
-                <div class="table-cell"><span class='lg-view'>09:30 AM</span><span class='sm-view'>9.30AM</span></div>
+                <div class="table-cell"><span class='lg-view'>09:30 AM</span><span class='sm-view'>9.30</span></div>
                 <div data-row="09:30 AM" data-col="sunday" class="table-cell"></div>
                 <div data-row="09:30 AM" data-col="monday" class="table-cell"></div>
                 <div data-row="09:30 AM" data-col="tuesday" class="table-cell"></div>
@@ -402,7 +406,7 @@ function makeTable(){
                 <div data-row="02:00 PM" data-col="saturday" class="table-cell"></div>
     
                 <!-- row 03:30 PM-->
-                <div class="table-cell"><span class='lg-view'>03:30 PM</span><span class='sm-view'>3.30PM</span></div>
+                <div class="table-cell"><span class='lg-view'>03:30 PM</span><span class='sm-view'>3.30</span></div>
                 <div data-row="03:30 PM" data-col="sunday" class="table-cell"></div>
                 <div data-row="03:30 PM" data-col="monday" class="table-cell"></div>
                 <div data-row="03:30 PM" data-col="tuesday" class="table-cell"></div>

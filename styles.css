@@ -101,6 +101,14 @@ nav.expanded{
     max-width: 800px;
 }
 
+@media (max-width: 600px) {
+    nav.expanded{
+        width: 100%;
+        display: block;
+        height: 90%;
+    }
+}
+
 nav ul{
     padding-top: 1rem;
     position: absolute;
