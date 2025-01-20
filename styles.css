@@ -152,12 +152,102 @@ nav .nav-func-container > *{
     overflow-x: hidden;
 }
 
+.nav-func-credits.visible{
+    display: block;
+}
+
+
+
+#credit-title{
+    font-family: 'Playwrite GB S';
+    font-weight: 300;
+    font-size: 2rem;
+
+    width: fit-content;
+    height: 3.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    
+}
+
+#credit-title i{
+    transition: 0.2s;
+    font-size: 2.5rem;
+}
+
+#credit-title i:hover{
+    color: white;
+}
+
+@media (max-width: 600px) {
+    #credit-title{
+        font-size: 1.5rem;
+    }
+}
+
+
+#credit-title::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(to right , var(--alt-accent) , var(--accent));
+}
+
+.nav-func-credits .person{
+    margin: 3rem 0;
+    display: flex;
+    align-items: center;
+}
+
+
+.nav-func-container .person a{
+    flex:2;
+}
+
+.nav-func-container .person .person-info{
+    flex:3
+}
+
+.nav-func-container .person a img{
+    width: 15rem;
+    height: 15rem;
+    border-radius: 50%;
+}
+
+@media (max-width:600px) {
+    .nav-func-container .person a img{
+        width: 8rem;
+        height: 8rem;
+    }
+}
+
+
+
+.nav-func-container .person .person-info .links > *{
+    font-size: 2.5rem;
+    transition: 0.2s;
+}
+
+.nav-func-container .person .person-info .links > *:hover{
+    color: white;
+}
+
+#eniamza{
+    position: relative;
+    bottom: 0.5rem;
+}
+
 .course-info-card{
     border: 1px solid gray;
     margin: 1rem;
     transition: 0.3s;
 
 }
+
+
 
 .course-info-card:hover{
     box-shadow: var(--accent) 0px 0px 14px;

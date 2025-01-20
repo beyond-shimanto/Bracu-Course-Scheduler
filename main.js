@@ -259,10 +259,10 @@ function expandNavBar(navFunction){
     const navBar = document.querySelector('nav');
     const coverEl = document.querySelector('.cover');
 
-    if(navBar.classList.contains('expanded')){
-        collapseNavBar();
-        return;
-    }
+    //if(navBar.classList.contains('expanded')){
+    //    collapseNavBar();
+    //    return;
+    //}
 
     navBar.classList.add('expanded');
     coverEl.classList.add('visible');
@@ -271,6 +271,9 @@ function expandNavBar(navFunction){
 
     if(navFunction === 'selected-courses-info'){
         showSelectedCoursesInfo();
+    }
+    else if(navFunction == 'credits'){
+        showCredits();
     }
 
 }
@@ -288,8 +291,41 @@ function collapseNavBar(){
 
 }
 
+function showCredits(){
+
+    const creditsInfoContainerEl = document.querySelector('.nav-func-credits');
+
+    if (creditsInfoContainerEl.classList.contains('visible')){
+        collapseNavBar();
+        return;
+    }
+
+    const navBarFunctions = document.querySelectorAll('.nav-func-container > *');
+    navBarFunctions.forEach(navFunc => {
+        navFunc.classList.remove('visible');
+    });
+
+    
+    creditsInfoContainerEl.classList.add('visible');
+
+}
+
 function showSelectedCoursesInfo(){
+
     const selectedCoursesInfoContainerEl = document.querySelector('.nav-func-selected-courses-info');
+
+    if (selectedCoursesInfoContainerEl.classList.contains('visible')){
+        collapseNavBar();
+        return;
+    }
+
+    const navBarFunctions = document.querySelectorAll('.nav-func-container > *');
+    navBarFunctions.forEach(navFunc => {
+        navFunc.classList.remove('visible');
+    });
+
+
+    
     const activeTableCells = document.querySelectorAll('.table.active .table-cell');
 
     selectedCoursesInfoContainerEl.classList.add('visible');
