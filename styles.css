@@ -185,6 +185,12 @@ nav .nav-func-container > *{
     }
 }
 
+@media (max-width: 400px) {
+    #credit-title{
+        font-size: 1.2rem;
+    }
+}
+
 
 #credit-title::after{
     content: '';
@@ -200,6 +206,12 @@ nav .nav-func-container > *{
     margin: 3rem 0;
     display: flex;
     align-items: center;
+}
+
+@media (max-width: 400px) {
+    .nav-func-credits .person{
+        font-size: 0.8rem;
+    }
 }
 
 
@@ -221,6 +233,13 @@ nav .nav-func-container > *{
     .nav-func-container .person a img{
         width: 8rem;
         height: 8rem;
+    }
+}
+
+@media (max-width:400px) {
+    .nav-func-container .person a img{
+        width: 6rem;
+        height: 6rem;
     }
 }
 
@@ -395,6 +414,11 @@ main{
     font-weight: 500;
     width: 100%;
 
+    transition: .3s;
+
+}
+#course-code-item-add-btn:hover{
+    background-color: #3a2e60;
 }
 
 #course-code-item-delete-btn{
