@@ -15,7 +15,7 @@ async function fetchJsonData(){
     // sort the data according to sections
     //This following bit was ripped off from preprereg git repo 💀
     data.sort(function(a, b) {
-        return `${a["courseCode"]} - ${a["sectionName"]}`.localeCompare(`${a["courseCode"]} - ${a["sectionName"]}`);
+        return `${a["courseCode"]} - ${a["sectionName"]}`.localeCompare(`${b["courseCode"]} - ${b["sectionName"]}`);
     });
     
     return data;
@@ -783,6 +783,7 @@ function updateCourseSelector(coursesData, courseCodeFilterArray, courseTimeFilt
         if(courseCodeFilterArray.includes(courseCode)){
 
             let courseCode = getCourseCode(courseData);
+            let courseSection = getSection(courseData);
             let seatLeft = getAvailableSeat(courseData);
             let days_str = getDays(courseData)[0] + ' - ' + getDays(courseData)[1];
             let finalExamDetail = getFinalExamDetail(courseData);
@@ -807,7 +808,7 @@ function updateCourseSelector(coursesData, courseCodeFilterArray, courseTimeFilt
             courseListEl.insertAdjacentHTML('beforeend', 
                 `
                 <div class="course-list-item-container" data-courseid = "${courseData.sectionId}">
-                    <p id="details" ><b>${courseCode}</b> // (${days_str}) // ${getTime(courseData)} // <b>Seat Left: ${seatLeft}</b></p>
+                    <p id="details" ><b>${courseCode}[${courseSection}]</b> // (${days_str}) // ${getTime(courseData)} // <b>Seat Left: ${seatLeft}</b></p>
                     <p id="lab-time-day"><b>Lab</b>: ${lab_str}</p>
                     <p><b>Final Exam:</b> ${finalExamDetail}</p>
                     <p> ${facultyName}</p>
@@ -1002,28 +1003,27 @@ function getLabTimes(courseObject){
         return null;
     }
 
+    
     first_slot = getTimeSlot(courseObject.labSchedules[0].startTime);
     second_slot = '';
     if (first_slot === '08:00 AM'){
         second_slot = '09:30 AM';
     }
-    else if(first_slot = '09:30 AM'){
+    else if(first_slot == '09:30 AM'){
         second_slot = '11:00 AM';
     }
-    else if(first_slot = '11:00 AM'){
+    else if(first_slot == '11:00 AM'){
         second_slot = '12:30 PM';
     }
-    else if(first_slot = '12:30 PM'){
+    else if(first_slot == '12:30 PM'){
         second_slot = '02:00 PM';
     }
-    else if(first_slot = '02:00 PM'){
+    else if(first_slot == '02:00 PM'){
         second_slot = '03:30 PM';
     }
-    else if(first_slot = '03:30 PM'){
+    else if(first_slot == '03:30 PM'){
         second_slot = '05:00 PM';
     }
-
-
 
     return [first_slot, second_slot];
 }
