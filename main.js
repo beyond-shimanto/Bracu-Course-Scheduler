@@ -6,14 +6,16 @@
 
 
 async function fetchJsonData(){
-    const response = await fetch('https://usis-cdn.eniamza.com/usisdump.json');
+    const response = await fetch('https://usis-cdn.eniamza.com/connect.json');
     //const response = await fetch('usisdump.json');
     const data = await response.json();
+
+    
 
     // sort the data according to sections
     //This following bit was ripped off from preprereg git repo 💀
     data.sort(function(a, b) {
-        return a["courseDetails"].localeCompare(b["courseDetails"]);
+        return `${a["courseCode"]} - ${a["sectionName"]}`.localeCompare(`${a["courseCode"]} - ${a["sectionName"]}`);
     });
     
     return data;
@@ -31,6 +33,10 @@ let tableIds = [];
 
 
 async function main(){
+
+
+
+
     const courseCodeInputEl = document.getElementById('course-code-input');
     const courseCodeItemAddButtonEl = document.getElementById('course-code-item-add-btn');
     const courseCodeItemsContainerEl = document.querySelector('.course-code-items-container');
@@ -57,6 +63,8 @@ async function main(){
 
 
     coursesData = await fetchJsonData();
+
+
 
 
     //mobile navbar event callback functions
@@ -356,14 +364,11 @@ function showSelectedCoursesInfo(){
         selectedCoursesInfoContainerEl.insertAdjacentHTML(`beforeend`, `
             
             <div class="course-info-card">
-            <p><b>Course Code:</b> ${courseObject.courseCode}</p>
-            <p><b>Prerequisite Course:</b> ${courseObject.preRequisiteCourses}</p>
-            <p><b>Faculty:</b> ${courseObject.empName} - ${courseObject.empShortName}</p>
-            <p><b>Section:</b> ${courseObject.courseDetails}</p>
-            <p><b>Exam Day:</b> ${courseObject.dayNo}</p>
-            <p><b>Seat Available:</b> ${courseObject.availableSeat}</p>
-            <p><b>Seat Filled:</b> ${courseObject.totalFillupSeat}</p>
-            <p><b>Seat remaining:</b> ${parseInt(courseObject.availableSeat) - parseInt(courseObject.totalFillupSeat)}</p>
+            <p><b>Course Code:</b> ${getCourseCode(courseObject)}</p>
+            <p><b>Faculty:</b> ${getFacultyName(courseObject)}</p>
+            <p><b>Section:</b> ${getSection(courseObject)}</p>
+            <p><b>Exam Day:</b> ${getFinalExamDetail(courseObject)}</p>
+            <p><b>Seat Available:</b> ${getAvailableSeat(courseObject)}</p>
 
 
             </div>
@@ -578,8 +583,8 @@ function pushToActiveTable(courseObject){
     let labDay = getLabDay(courseObject);
     let labTimes = getLabTimes(courseObject);
 
-    let courseDetails = courseObject.courseDetails;
-    let courseFaculty = getFacultyName(courseObject)[0];
+    let courseDetails = `${getCourseCode(courseObject)}[${getSection(courseObject)}]`;
+    let courseFaculty = getFacultyName(courseObject);
 
     //checking if the course is already added
     for(let cell of tableCells){
@@ -589,7 +594,7 @@ function pushToActiveTable(courseObject){
         let occupiedCellCourseId = parseInt(cell.dataset.courseid);
         let occupiedCellCourseObject = getCourseObjectFromId(occupiedCellCourseId);
 
-        if(occupiedCellCourseObject.courseCode === courseObject.courseCode){
+        if(getCourseCode(occupiedCellCourseObject) === getCourseCode(courseObject)){
             showConflictPrompt('course', occupiedCellCourseObject, courseObject);
             return;
         }
@@ -632,7 +637,7 @@ function pushToActiveTable(courseObject){
         tableCells.forEach(cell => {
             if(cell.dataset.row === time && cell.dataset.col === day){
                 cell.innerText = courseDetails + '-' + courseFaculty;
-                cell.dataset.courseid = courseObject.id;
+                cell.dataset.courseid = courseObject.sectionId;
 
                 cell.classList.add('occupied-cell');
             }
@@ -648,7 +653,7 @@ function pushToActiveTable(courseObject){
         tableCells.forEach(cell => {
             if(cell.dataset.row === time && cell.dataset.col === labDay){
                 cell.innerText = courseDetails  + '(LAB)';
-                cell.dataset.courseid = courseObject.id;
+                cell.dataset.courseid = courseObject.sectionId;
 
                 cell.classList.add('occupied-cell');
             }
@@ -661,7 +666,7 @@ function deleteFromActiveTable(courseObject){
     const tableCells = document.querySelectorAll(".table.active .table-cell");
     tableCells.forEach(cell => {
         courseId = parseInt(cell.dataset.courseid)
-        if (courseId === courseObject.id){
+        if (courseId === courseObject.sectionId){
             cell.innerText = '';
             cell.dataset.courseid = '';
 
@@ -729,14 +734,14 @@ function showConflictPrompt(confilctType, occupiedCourseObject, newCourseObject)
     let promptText = ''
     if(confilctType === 'time'){
         promptText = `There's a conflict between the timing of the selected course!\n
-        occupied course: ${occupiedCourseObject.courseDetails}\n
-        selected course: ${newCourseObject.courseDetails}\n
+        occupied course: ${getCourseCode(occupiedCourseObject)}[${getSection(occupiedCourseObject)}]\n
+        selected course: ${getCourseCode(newCourseObject)}[${getSection(newCourseObject)}]\n
         Do you want to replace?`;
     }
     else{
         promptText = `You already added the selected course!\n
-        occupied course: ${occupiedCourseObject.courseDetails}\n
-        selected course: ${newCourseObject.courseDetails}\n
+        occupied course: ${getCourseCode(occupiedCourseObject)}[${getSection(occupiedCourseObject)}]\n
+        selected course: ${getCourseCode(newCourseObject)}[${getSection(newCourseObject)}]\n
         Do you want to replace?`;
     }
     
@@ -772,12 +777,16 @@ function updateCourseSelector(coursesData, courseCodeFilterArray, courseTimeFilt
     const courseListEl = document.querySelector('.course-list');
 
     courseListEl.innerHTML = '';
+    // courseData is courseObject
     coursesData.forEach(courseData => {
         courseCode = courseData.courseCode.toUpperCase();
         if(courseCodeFilterArray.includes(courseCode)){
 
-            let seatLeft = parseInt(courseData.availableSeat) - parseInt(courseData.totalFillupSeat);
+            let courseCode = getCourseCode(courseData);
+            let seatLeft = getAvailableSeat(courseData);
             let days_str = getDays(courseData)[0] + ' - ' + getDays(courseData)[1];
+            let finalExamDetail = getFinalExamDetail(courseData);
+            let facultyName = getFacultyName(courseData);
 
             let lab_day_str = getLabDay(courseData);
             let lab_times_array = getLabTimes(courseData);
@@ -797,11 +806,11 @@ function updateCourseSelector(coursesData, courseCodeFilterArray, courseTimeFilt
 
             courseListEl.insertAdjacentHTML('beforeend', 
                 `
-                <div class="course-list-item-container" data-courseid = "${courseData.id}">
-                    <p id="details" ><b>${courseData.courseDetails}</b> // (${days_str}) // ${getTime(courseData)} // <b>Seat Left: ${seatLeft}</b></p>
+                <div class="course-list-item-container" data-courseid = "${courseData.sectionId}">
+                    <p id="details" ><b>${courseCode}</b> // (${days_str}) // ${getTime(courseData)} // <b>Seat Left: ${seatLeft}</b></p>
                     <p id="lab-time-day"><b>Lab</b>: ${lab_str}</p>
-                    <p><b>Exam Day:</b> ${courseData.dayNo}</p>
-                    <p> ${getFacultyName(courseData)[0]} (${getFacultyName(courseData)[1]})</p>
+                    <p><b>Final Exam:</b> ${finalExamDetail}</p>
+                    <p> ${facultyName}</p>
                     
                     
                 </div>
@@ -923,46 +932,46 @@ function deleteDayFromFilter(){
 //end
 
 //courseObject related helper functions
+function getCourseCode(courseObject){
+    const courseCode = courseObject.courseCode;
+    return courseCode;
+}
+
+function getSection(courseObject){
+    const section = courseObject.sectionName;
+    return section;
+}
+
+function getFinalExamDetail(courseObject){
+    const finalExamDetail = courseObject.sectionSchedule.finalExamDetail;
+    return finalExamDetail;
+}
+
+function getAvailableSeat(courseObject){
+    const capacity = parseInt(courseObject.capacity);
+    const consumedSeat = parseInt(courseObject.consumedSeat);
+    const availableSeat = capacity - consumedSeat;
+
+    return availableSeat.toString();
+}
+
 
 function getDays(courseObject){
-    str = courseObject.classSchedule;
     resultArray = [];
-    first_day = '';
-    second_day = '';
-    
-    second_day_starting_index = str.indexOf(',') + 1;
 
-    for(let i = 0; i < str.length; i = i + 1){
-        if (str[i] === '('){
-            break;
-        }
-        first_day += str[i].toLowerCase();
-    }
-
-    for (let i = second_day_starting_index; str.length; i = i + 1){
-        if (str[i] === '('){
-            break;
-        }
-
-       second_day += str[i].toLowerCase();
-
-
-    }
-    return [first_day, second_day];
+    courseObject.sectionSchedule.classSchedules.forEach(c => {
+        resultArray.push(c.day.toLowerCase());
+    })
+    return resultArray;
 }
 
 function getTime(courseObject){
-    str = courseObject.classSchedule;
-    time_slot_starting_index = str.indexOf('(') + 1;
-    time_slot = '';
 
-    for(let i = time_slot_starting_index; i<str.length; i = i + 1){
-        if (str[i] === '-'){
-            break;
-        }
+    //return in this format: "08:00 AM" "03:30 PM"
+    //originally the data is in this format: 'startTime': '12:30:00' 
+    
+    time_slot = getTimeSlot(courseObject.sectionSchedule.classSchedules[0].startTime)
 
-        time_slot += str[i];
-    }
 
     return time_slot;
 }
@@ -970,7 +979,7 @@ function getTime(courseObject){
 function getCourseObjectFromId(id){
     let res = null;
     for(let i = 0; i < coursesData.length; i = i + 1){
-        if (coursesData[i].id === id){
+        if (coursesData[i].sectionId === id){
             res = coursesData[i];
             break;
         }
@@ -980,137 +989,79 @@ function getCourseObjectFromId(id){
 }
 
 function getFacultyName(courseObject){
-    short_name = courseObject.empShortName;
-    full_name = courseObject.empName;
+    short_name = courseObject.faculties;
 
-    return [short_name, full_name];
+    return short_name;
 }
 
 function getLabTimes(courseObject){
 
     //I can't explain how this function works 💀
 
-    if (courseObject.classSchedule === courseObject.classLabSchedule){
+    if (courseObject.labSchedules == null){
         return null;
     }
 
-    regular_class_array = []
-    regular_class_str = courseObject.classSchedule + ',';
-
-    lab_class_str = courseObject.classLabSchedule + ',';
-    lab_class_array = []
-
-    let a = '';
-    for (let i=0; i < regular_class_str.length; i = i + 1){
-        if (regular_class_str[i] === ','){
-            regular_class_array.push(a);
-            a = ''
-            continue;
-        }
-        a += regular_class_str[i];
-
+    first_slot = getTimeSlot(courseObject.labSchedules[0].startTime);
+    second_slot = '';
+    if (first_slot === '08:00 AM'){
+        second_slot = '09:30 AM';
+    }
+    else if(first_slot = '09:30 AM'){
+        second_slot = '11:00 AM';
+    }
+    else if(first_slot = '11:00 AM'){
+        second_slot = '12:30 PM';
+    }
+    else if(first_slot = '12:30 PM'){
+        second_slot = '02:00 PM';
+    }
+    else if(first_slot = '02:00 PM'){
+        second_slot = '03:30 PM';
+    }
+    else if(first_slot = '03:30 PM'){
+        second_slot = '05:00 PM';
     }
 
 
-    let b = '';
-    for(let i = 0; i < lab_class_str.length; i = i + 1){
-        if(lab_class_str[i] === ','){
-            lab_class_array.push(b);
-            b = '';
-            continue;
-        }
-        b += lab_class_str[i];
-    }
-    
 
-    regular_class_array.forEach(item => {
-        if (lab_class_array.includes(item)){
-
-            item_index_at_lab_array = lab_class_array.indexOf(item);
-
-            lab_class_array.splice(item_index_at_lab_array,1);
-        }
-    })
-
-
-    resArray = []
-
-    lab_class_array.forEach(item => {
-        starting_index = item.indexOf('(') + 1;
-        c = ''
-        for(let i=starting_index; i<item.length; i = i + 1){
-            if (item[i] === '-'){
-                resArray.push(c);
-                break;
-            }
-            c += item[i];
-        }
-    })
-
-    return resArray;
+    return [first_slot, second_slot];
 }
 
 function getLabDay(courseObject){
-    if (courseObject.classSchedule === courseObject.classLabSchedule){
+    if (courseObject.labSchedules == null){
         return null;
     }
 
-    regular_class_array = []
-    regular_class_str = courseObject.classSchedule + ',';
+    lab_day = courseObject.labSchedules[0].day.toLowerCase();
 
-    lab_class_str = courseObject.classLabSchedule + ',';
-    lab_class_array = []
+    return lab_day;
 
-    let a = '';
-    for (let i=0; i < regular_class_str.length; i = i + 1){
-        if (regular_class_str[i] === ','){
-            regular_class_array.push(a);
-            a = ''
-            continue;
-        }
-        a += regular_class_str[i];
-
-    }
-
-
-
-    let b = '';
-    for(let i = 0; i < lab_class_str.length; i = i + 1){
-        if(lab_class_str[i] === ','){
-            lab_class_array.push(b);
-            b = '';
-            continue;
-        }
-        b += lab_class_str[i];
-    }
-    
-
-
-    regular_class_array.forEach(item => {
-        if (lab_class_array.includes(item)){
-
-            item_index_at_lab_array = lab_class_array.indexOf(item);
-
-            lab_class_array.splice(item_index_at_lab_array,1);
-        }
-    })
-
-
-
-    res = ''
-
-    for(i=0; i<lab_class_array[0].length; i = i + 1){
-        if (lab_class_array[0][i] === '('){
-            break;
-        }
-
-        res += lab_class_array[0][i];
-    }
-
-    res = res.toLowerCase();
-
-    return res;
 }
+
+
+
+function getTimeSlot(time_string){
+
+    //converts 15:30:00 into 03:30 PM
+
+    time_slot = '';
+    start_time = time_string.slice(0,5);
+    start_hour = parseInt(start_time.slice(0,2))
+    if (start_hour > 12){
+        time_slot = `0${(start_hour - 12).toString()}${start_time.slice(2,5)} PM`;
+    }
+    else if(start_hour == 12){
+        time_slot = `${(start_hour).toString()}${start_time.slice(2,5)} PM`
+    }
+    else{
+        time_slot = `${start_time} AM`
+    }
+
+    return time_slot;
+    
+}
+
 
 // end
 main();
