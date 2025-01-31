@@ -632,6 +632,25 @@ function pushToActiveTable(courseObject){
         }
     }
 
+    //checking for exam time conflict
+    for(let cell of tableCells){
+        if(cell.innerText === '' || cell.dataset.row === undefined || cell.dataset.col === undefined){
+            continue;
+        }
+        let occupiedCellCourseId = parseInt(cell.dataset.courseid);
+        let occupiedCellCourseObject = getCourseObjectFromId(occupiedCellCourseId);
+
+        if((getFinalExamDate(occupiedCellCourseObject) === getFinalExamDate(courseObject))
+        && (getFinalExamTime(occupiedCellCourseObject) === getFinalExamTime(courseObject))    
+        ){
+            showConflictPrompt('exam', occupiedCellCourseObject, courseObject);
+            return;
+        }
+
+        
+    }
+
+
     //pushing regular class into cell
     days.forEach(day => {
         tableCells.forEach(cell => {
@@ -738,6 +757,14 @@ function showConflictPrompt(confilctType, occupiedCourseObject, newCourseObject)
         selected course: ${getCourseCode(newCourseObject)}[${getSection(newCourseObject)}]\n
         Do you want to replace?`;
     }
+
+    else if(confilctType == 'exam'){
+        promptText = `There's a conflict between the exam time of the selected course!\n
+        occupied course: ${getCourseCode(occupiedCourseObject)}[${getSection(occupiedCourseObject)}]\n
+        selected course: ${getCourseCode(newCourseObject)}[${getSection(newCourseObject)}]\n
+        Do you want to replace?`;
+    }
+
     else{
         promptText = `You already added the selected course!\n
         occupied course: ${getCourseCode(occupiedCourseObject)}[${getSection(occupiedCourseObject)}]\n
@@ -946,6 +973,16 @@ function getSection(courseObject){
 function getFinalExamDetail(courseObject){
     const finalExamDetail = courseObject.sectionSchedule.finalExamDetail;
     return finalExamDetail;
+}
+
+function getFinalExamDate(courseObject){
+    const finalExamDate = courseObject.sectionSchedule.finalExamDate;
+    return finalExamDate;
+}
+
+function getFinalExamTime(courseObject){
+    const finalExamTime = courseObject.sectionSchedule.finalExamStartTime;
+    return finalExamTime;
 }
 
 function getAvailableSeat(courseObject){
