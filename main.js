@@ -348,7 +348,6 @@ function showSelectedCoursesInfo(){
         let courseId = parseInt(cell.dataset.courseid);
         let courseObject = getCourseObjectFromId(courseId);
 
-        
 
         if(courseObjectsInActiveTable.includes(courseObject)){
             continue;
@@ -361,12 +360,52 @@ function showSelectedCoursesInfo(){
 
     selectedCoursesInfoContainerEl.innerHTML = '<h3>Selected Courses Information</h3>';
     courseObjectsInActiveTable.forEach(courseObject => {
+
+        let timeSlots = getTimeSlots(courseObject);
+        let labTimeSlots = getLabTimeSlots(courseObject);
+
+        let lab_str = 'no lab';
+            if (labTimeSlots != null){
+                let lab_day_str = labTimeSlots[0].day;
+
+                let lab_time_str = '';
+                for(let timeObject of labTimeSlots){
+                    lab_time_str = lab_time_str + timeObject.time + ', '
+                }
+                lab_time_str = lab_time_str.slice(0, lab_time_str.length - 2);
+
+                lab_str = `${lab_day_str} (${lab_time_str})`;
+            }
+            
+        let days_str = '';
+
+        if(timeSlots[0].day == timeSlots[1].day){
+            days_str = timeSlots[0].day;
+        }
+        else{
+            days_str = `(${timeSlots[0].day} - ${timeSlots[1].day})`;
+        }
+
+        let time_str = '';
+
+        if(timeSlots[0].time == timeSlots[1].time){
+            time_str = timeSlots[0].time;
+        }
+        else{
+            time_str = `(${timeSlots[0].time},${timeSlots[1].time})`;
+        }
+
+
+
         selectedCoursesInfoContainerEl.insertAdjacentHTML(`beforeend`, `
             
             <div class="course-info-card">
             <p><b>Course Code:</b> ${getCourseCode(courseObject)}</p>
             <p><b>Faculty:</b> ${getFacultyName(courseObject)}</p>
             <p><b>Section:</b> ${getSection(courseObject)}</p>
+            <p><b>Time:</b> ${time_str}</p>
+            <p><b>Days:</b> ${days_str}</p>
+            <p><b>Lab:</b> ${lab_str}</p>
             <p><b>Exam Day:</b> ${getFinalExamDetail(courseObject)}</p>
             <p><b>Seat Available:</b> ${getAvailableSeat(courseObject)}</p>
 
@@ -578,11 +617,8 @@ function pushToActiveTable(courseObject){
 
 
     const tableCells = document.querySelectorAll('.table.active .table-cell');
-    let time = getTime(courseObject);
-    let days = getDays(courseObject);
-    let labDay = getLabDay(courseObject);
-    let labTimes = getLabTimes(courseObject);
-
+    let timeSlots = getTimeSlots(courseObject);
+    let labTimeSlots = getLabTimeSlots(courseObject);
     let courseDetails = `${getCourseCode(courseObject)}[${getSection(courseObject)}]`;
     let courseFaculty = getFacultyName(courseObject);
 
@@ -604,9 +640,9 @@ function pushToActiveTable(courseObject){
     }
 
     //checking for time conflicts for regular class
-    for(let day of days){
+    for(let slot of timeSlots){
         for(let cell of tableCells){
-            if (cell.dataset.row === time && cell.dataset.col === day && !(cell.innerText === '')){
+            if (cell.dataset.row === slot.time && cell.dataset.col === slot.day && !(cell.innerText === '')){
                 let occupiedCellCourseId = parseInt(cell.dataset.courseid);
                 let occupiedCellCourseObject = getCourseObjectFromId(occupiedCellCourseId);
 
@@ -617,11 +653,11 @@ function pushToActiveTable(courseObject){
     }
 
     //checking for time conflicts for lab class
-    if(!(labTimes === null)){
+    if(!(labTimeSlots === null)){
         
-        for(let labTime of labTimes){
+        for(let slot of labTimeSlots){
             for(let cell of tableCells){
-                if (cell.dataset.row === labTime && cell.dataset.col === labDay && !(cell.innerText === '')){
+                if (cell.dataset.row === slot.time && cell.dataset.col === slot.day && !(cell.innerText === '')){
                     let occupiedCellCourseId = parseInt(cell.dataset.courseid);
                     let occupiedCellCourseObject = getCourseObjectFromId(occupiedCellCourseId);
 
@@ -652,9 +688,9 @@ function pushToActiveTable(courseObject){
 
 
     //pushing regular class into cell
-    days.forEach(day => {
+    timeSlots.forEach(slot => {
         tableCells.forEach(cell => {
-            if(cell.dataset.row === time && cell.dataset.col === day){
+            if(cell.dataset.row === slot.time && cell.dataset.col === slot.day){
                 cell.innerText = courseDetails + '-' + courseFaculty;
                 cell.dataset.courseid = courseObject.sectionId;
 
@@ -664,20 +700,20 @@ function pushToActiveTable(courseObject){
 
     });
 
-    if((labTimes === null)){
-        return;
-    }
     //pushing lab into cell
-    labTimes.forEach(time => {
-        tableCells.forEach(cell => {
-            if(cell.dataset.row === time && cell.dataset.col === labDay){
-                cell.innerText = courseDetails  + '(LAB)';
-                cell.dataset.courseid = courseObject.sectionId;
+    if (!(labTimeSlots == null)){
+        labTimeSlots.forEach(slot => {
+            tableCells.forEach(cell => {
+                if(cell.dataset.row === slot.time && cell.dataset.col === slot.day){
+                    cell.innerText = courseDetails  + '(LAB)';
+                    cell.dataset.courseid = courseObject.sectionId;
 
-                cell.classList.add('occupied-cell');
-            }
+                    cell.classList.add('occupied-cell');
+                }
+            });
         });
-    });
+    }
+        
 
 }
 
@@ -806,36 +842,57 @@ function updateCourseSelector(coursesData, courseCodeFilterArray, courseTimeFilt
     courseListEl.innerHTML = '';
     // courseData is courseObject
     coursesData.forEach(courseData => {
-        courseCode = courseData.courseCode.toUpperCase();
+        let courseCode = courseData.courseCode.toUpperCase();
         if(courseCodeFilterArray.includes(courseCode)){
 
             let courseCode = getCourseCode(courseData);
             let courseSection = getSection(courseData);
             let seatLeft = getAvailableSeat(courseData);
-            let days_str = getDays(courseData)[0] + ' - ' + getDays(courseData)[1];
+            let timeSlots = getTimeSlots(courseData);
+            let labTimeSlots = getLabTimeSlots(courseData);
             let finalExamDetail = getFinalExamDetail(courseData);
             let facultyName = getFacultyName(courseData);
 
-            let lab_day_str = getLabDay(courseData);
-            let lab_times_array = getLabTimes(courseData);
-            let lab_str = lab_day_str + '(';
-            if (lab_day_str === null){
-                lab_str = 'no lab';
-            }else{
-                lab_times_array.forEach(time => {
-                    lab_str = lab_str +  time +  ', ';
-                });
+            let lab_str = 'no lab';
+            if (labTimeSlots != null){
+                let lab_day_str = labTimeSlots[0].day;
 
-                lab_str = lab_str.slice(0, lab_str.length - 2);
-                lab_str = lab_str + ')';
-                
+                let lab_time_str = '';
+                for(let timeObject of labTimeSlots){
+                    lab_time_str = lab_time_str + timeObject.time + ', '
+                }
+                lab_time_str = lab_time_str.slice(0, lab_time_str.length - 2);
+
+                lab_str = `${lab_day_str} (${lab_time_str})`;
             }
+            
+            let days_str = '';
+
+            if(timeSlots[0].day == timeSlots[1].day){
+                days_str = timeSlots[0].day;
+            }
+            else{
+                days_str = `(${timeSlots[0].day} - ${timeSlots[1].day})`;
+            }
+
+            let time_str = '';
+
+            if(timeSlots[0].time == timeSlots[1].time){
+                time_str = timeSlots[0].time;
+            }
+            else{
+                time_str = `(${timeSlots[0].time},${timeSlots[1].time})`;
+            }
+
+            
+
+
             
 
             courseListEl.insertAdjacentHTML('beforeend', 
                 `
                 <div class="course-list-item-container" data-courseid = "${courseData.sectionId}">
-                    <p id="details" ><b>${courseCode}[${courseSection}]</b> // (${days_str}) // ${getTime(courseData)} // <b>Seat Left: ${seatLeft}</b></p>
+                    <p id="details" ><b>${courseCode}[${courseSection}]</b> // ${days_str} // ${time_str} // <b>Seat Left: ${seatLeft}</b></p>
                     <p id="lab-time-day"><b>Lab</b>: ${lab_str}</p>
                     <p><b>Final Exam:</b> ${finalExamDetail}</p>
                     <p> ${facultyName}</p>
@@ -857,7 +914,13 @@ function updateCourseSelector(coursesData, courseCodeFilterArray, courseTimeFilt
         renderedCourseItems.forEach(item => {
             correspondingId = parseInt(item.dataset.courseid);
             correspondingCourseObject = getCourseObjectFromId(correspondingId);
-            if (! (getTime(correspondingCourseObject) === courseTimeFilter)){
+
+            timesArray = [];
+            for(let timeObject of getTimeSlots(correspondingCourseObject)){
+                timesArray.push(timeObject.time);
+            }
+
+            if (! (timesArray.includes(courseTimeFilter))){
                 item.remove();
             }
     });
@@ -869,7 +932,13 @@ function updateCourseSelector(coursesData, courseCodeFilterArray, courseTimeFilt
         renderedCourseItems.forEach(item => {
             correspondingId = parseInt(item.dataset.courseid);
             correspondingCourseObject = getCourseObjectFromId(correspondingId);
-            if (! (getDays(correspondingCourseObject).includes(CourseDayFilter))){
+
+            daysArray = [];
+            for(let timeObject of getTimeSlots(correspondingCourseObject)){
+                daysArray.push(timeObject.day);
+            }
+
+            if (! (daysArray.includes(CourseDayFilter))){
                 item.remove();
             }
     });
@@ -994,25 +1063,76 @@ function getAvailableSeat(courseObject){
 }
 
 
-function getDays(courseObject){
-    resultArray = [];
-
-    courseObject.sectionSchedule.classSchedules.forEach(c => {
-        resultArray.push(c.day.toLowerCase());
-    })
-    return resultArray;
-}
-
-function getTime(courseObject){
-
-    //return in this format: "08:00 AM" "03:30 PM"
-    //originally the data is in this format: 'startTime': '12:30:00' 
+function getTimeSlots(courseObject){
+    let resArray = [];
+    const timeObjects = courseObject.sectionSchedule.classSchedules;
+    for(let timeObject of timeObjects){
+        let slot = {
+            time: get12TimeFrom24Time(timeObject.startTime),
+            day: timeObject.day.toLowerCase()
+        }
+        resArray.push(slot);
     
-    time_slot = getTimeSlot(courseObject.sectionSchedule.classSchedules[0].startTime)
+    }
 
-
-    return time_slot;
+    return resArray;
 }
+
+function getLabTimeSlots(courseObject){
+    if (courseObject.labSchedules == null){
+        return null;
+    }
+
+    let resArray = [];
+    const timeObjects = courseObject.labSchedules;
+    for(let timeObject of timeObjects){
+        let first_slot_start_time = get12TimeFrom24Time(timeObject.startTime);
+        let first_slot_ending_time = get12TimeFrom24Time(timeObject.endTime);
+
+        let second_slot_start_time = ''
+
+        if ((first_slot_start_time === '08:00 AM')  &&  (first_slot_ending_time != '09:20 AM')) {
+            second_slot_start_time = '09:30 AM';
+        }
+        else if((first_slot_start_time == '09:30 AM') &&  (first_slot_ending_time != '10:50 AM')){
+            second_slot_start_time = '11:00 AM';
+        }
+        else if((first_slot_start_time == '11:00 AM') &&  (first_slot_ending_time != '12:20 PM')){
+            second_slot_start_time = '12:30 PM';
+        }
+        else if((first_slot_start_time == '12:30 PM') &&  (first_slot_ending_time != '01:50 PM')){
+            second_slot_start_time = '02:00 PM';
+        }
+        else if((first_slot_start_time == '02:00 PM') &&  (first_slot_ending_time != '03:20 PM')){
+            second_slot_start_time = '03:30 PM';
+        }
+        else if((first_slot_start_time == '03:30 PM') &&  (first_slot_ending_time != '04:50 AM')){
+            second_slot_start_time = '05:00 PM';
+        }
+
+        
+        let slot_1 = {
+            time: first_slot_start_time,
+            day: timeObject.day.toLowerCase()
+        }
+        resArray.push(slot_1);
+        
+        if(second_slot_start_time != ''){
+            let slot_2 = {
+                time: second_slot_start_time,
+                day: timeObject.day.toLowerCase()
+            }
+
+            resArray.push(slot_2);
+        }
+        
+        return resArray;
+
+    }
+}
+
+
+
 
 function getCourseObjectFromId(id){
     let res = null;
@@ -1032,53 +1152,10 @@ function getFacultyName(courseObject){
     return short_name;
 }
 
-function getLabTimes(courseObject){
-
-    //I can't explain how this function works 💀
-
-    if (courseObject.labSchedules == null){
-        return null;
-    }
-
-    
-    first_slot = getTimeSlot(courseObject.labSchedules[0].startTime);
-    second_slot = '';
-    if (first_slot === '08:00 AM'){
-        second_slot = '09:30 AM';
-    }
-    else if(first_slot == '09:30 AM'){
-        second_slot = '11:00 AM';
-    }
-    else if(first_slot == '11:00 AM'){
-        second_slot = '12:30 PM';
-    }
-    else if(first_slot == '12:30 PM'){
-        second_slot = '02:00 PM';
-    }
-    else if(first_slot == '02:00 PM'){
-        second_slot = '03:30 PM';
-    }
-    else if(first_slot == '03:30 PM'){
-        second_slot = '05:00 PM';
-    }
-
-    return [first_slot, second_slot];
-}
-
-function getLabDay(courseObject){
-    if (courseObject.labSchedules == null){
-        return null;
-    }
-
-    lab_day = courseObject.labSchedules[0].day.toLowerCase();
-
-    return lab_day;
-
-}
 
 
 
-function getTimeSlot(time_string){
+function get12TimeFrom24Time(time_string){
 
     //converts 15:30:00 into 03:30 PM
 
